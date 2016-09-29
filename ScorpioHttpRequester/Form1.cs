@@ -54,6 +54,21 @@ namespace ScorpioHttpRequester {
         private void Exec(Action action) {
             Invoke(action);
         }
+        private string toString(Stream stream) {
+            if (stream == null) return "";
+            return Encode.GetString(toByteArray(stream));
+        }
+        /// <summary> 字节流转成byte[] </summary>
+        private byte[] toByteArray(Stream stream) {
+            if (stream == null) return null;
+            MemoryStream result = new MemoryStream();
+            int length = 0;
+            byte[] bytes = new byte[8192];
+            while ((length = stream.Read(bytes, 0, 8192)) > 0) {
+                result.Write(bytes, 0, length);
+            }
+            return result.ToArray();
+        }
         private void SetData(HttpWebResponse response) {
             statusLabel.Text = "Status : " + response.ProtocolVersion.ToString() + " " + (int)response.StatusCode + " " + response.StatusDescription;
             if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
@@ -69,7 +84,7 @@ namespace ScorpioHttpRequester {
                     builder.AppendLine("        " + head + " : " + response.Headers.Get(head));
                 }
                 statusText.Text = builder.ToString();
-                resultText.Text = Commons.Util.HttpUtil.toString(response.GetResponseStream());
+                resultText.Text = toString(response.GetResponseStream());
             } else {
                 resultText.Text = "";
             }

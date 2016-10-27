@@ -35,6 +35,9 @@ namespace ScorpioHttpRequester {
             if (System.IO.File.Exists("./contenttypes")) {
                 m_ContentTypes.AddRange(Encode.GetString(File.ReadAllBytes("./contenttypes")).Split('\n'));
             }
+            if (System.IO.File.Exists("./content")) {
+                contentText.Text = Encode.GetString(File.ReadAllBytes("./content"));
+            }
             foreach (var contenttype in m_ContentBaseTypes) { contentTypeText.Items.Add(contenttype); }
             foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
             if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
@@ -50,6 +53,8 @@ namespace ScorpioHttpRequester {
                 m_ContentTypes.Insert(0, contentType);
                 File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));
             }
+            if (!string.IsNullOrEmpty(contentText.Text))
+                File.WriteAllBytes("./content", Encode.GetBytes(contentText.Text));
         }
         private void Exec(Action action) {
             Invoke(action);
@@ -108,7 +113,7 @@ namespace ScorpioHttpRequester {
                     }
                     Exec(() => { SetData(response); });
                     response.Close();
-                } catch (Exception ex) {
+                } catch (Exception ex) { 
                     Exec(() => { resultText.Text = "请求出错 : " + ex.ToString(); });
                 }
             });
@@ -120,9 +125,9 @@ namespace ScorpioHttpRequester {
                 MessageBox.Show("请输入url");
                 return;
             }
-            Save();
-            string content = contentText.Text;
+            string content = contentText.Text; 
             string contentType = contentTypeText.Text;
+            Save();
             Thread thread = new Thread(() => {
                 try {
                     byte[] body = Encode.GetBytes(content);
@@ -147,6 +152,18 @@ namespace ScorpioHttpRequester {
                 }
             });
             thread.Start();
+        }
+
+        private void buttonUrlEncode_Click(object sender, EventArgs e) {
+            string text = resultText.Text;
+            if (string.IsNullOrEmpty(text)) { return; }
+            resultText.Text = Commons.Util.UriTranscoder.URLEncode(text, Encoding.UTF8);
+        }
+
+        private void buttonUrlDecode_Click(object sender, EventArgs e) {
+            string text = resultText.Text;
+            if (string.IsNullOrEmpty(text)) { return; }
+            resultText.Text = Commons.Util.UriTranscoder.URLDecode(text, Encoding.UTF8);
         }
     }
 }

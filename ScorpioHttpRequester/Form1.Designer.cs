@@ -31,10 +31,12 @@
             this.resultText = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.contentText = new System.Windows.Forms.RichTextBox();
             this.contentTypeText = new System.Windows.Forms.ComboBox();
+            this.contentText = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.statusText = new System.Windows.Forms.RichTextBox();
+            this.buttonUrlEncode = new System.Windows.Forms.Button();
+            this.buttonUrlDecode = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -94,7 +96,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.resultText.Location = new System.Drawing.Point(462, 275);
             this.resultText.Name = "resultText";
-            this.resultText.Size = new System.Drawing.Size(488, 325);
+            this.resultText.Size = new System.Drawing.Size(488, 287);
             this.resultText.TabIndex = 5;
             this.resultText.Text = "";
             // 
@@ -122,14 +124,15 @@
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // contentTypeText
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 12);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Content Type :";
+            this.contentTypeText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.contentTypeText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.contentTypeText.FormattingEnabled = true;
+            this.contentTypeText.Location = new System.Drawing.Point(101, 10);
+            this.contentTypeText.Name = "contentTypeText";
+            this.contentTypeText.Size = new System.Drawing.Size(329, 20);
+            this.contentTypeText.TabIndex = 2;
             // 
             // contentText
             // 
@@ -142,15 +145,14 @@
             this.contentText.TabIndex = 1;
             this.contentText.Text = "";
             // 
-            // contentTypeText
+            // label3
             // 
-            this.contentTypeText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.contentTypeText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.contentTypeText.FormattingEnabled = true;
-            this.contentTypeText.Location = new System.Drawing.Point(101, 10);
-            this.contentTypeText.Name = "contentTypeText";
-            this.contentTypeText.Size = new System.Drawing.Size(329, 20);
-            this.contentTypeText.TabIndex = 2;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(89, 12);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Content Type :";
             // 
             // statusText
             // 
@@ -162,11 +164,33 @@
             this.statusText.TabIndex = 7;
             this.statusText.Text = "";
             // 
+            // buttonUrlEncode
+            // 
+            this.buttonUrlEncode.Location = new System.Drawing.Point(462, 573);
+            this.buttonUrlEncode.Name = "buttonUrlEncode";
+            this.buttonUrlEncode.Size = new System.Drawing.Size(75, 23);
+            this.buttonUrlEncode.TabIndex = 8;
+            this.buttonUrlEncode.Text = "UrlEncode";
+            this.buttonUrlEncode.UseVisualStyleBackColor = true;
+            this.buttonUrlEncode.Click += new System.EventHandler(this.buttonUrlEncode_Click);
+            // 
+            // buttonUrlDecode
+            // 
+            this.buttonUrlDecode.Location = new System.Drawing.Point(543, 573);
+            this.buttonUrlDecode.Name = "buttonUrlDecode";
+            this.buttonUrlDecode.Size = new System.Drawing.Size(75, 23);
+            this.buttonUrlDecode.TabIndex = 9;
+            this.buttonUrlDecode.Text = "UrlDecode";
+            this.buttonUrlDecode.UseVisualStyleBackColor = true;
+            this.buttonUrlDecode.Click += new System.EventHandler(this.buttonUrlDecode_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(962, 612);
+            this.Controls.Add(this.buttonUrlDecode);
+            this.Controls.Add(this.buttonUrlEncode);
             this.Controls.Add(this.statusText);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.resultText);
@@ -200,6 +224,8 @@
         private System.Windows.Forms.RichTextBox contentText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox statusText;
+        private System.Windows.Forms.Button buttonUrlEncode;
+        private System.Windows.Forms.Button buttonUrlDecode;
     }
 }
 

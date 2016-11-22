@@ -20,6 +20,7 @@ namespace ScorpioHttpRequester {
             "application/json",
             "application/xml",
             "application/rdf+xml",
+            "application/x-www-form-urlencoded",
         };
         private List<string> m_ContentTypes = new List<string>();
         public Form1() {

@@ -28,19 +28,20 @@ namespace ScorpioHttpRequester {
         }
         private void Form1_Load(object sender, EventArgs e) {
             tabControl1.TabPages[0].Text = "Content";
-            if (System.IO.File.Exists("./urls")) {
+            if (File.Exists("./urls")) {
                 m_Urls.AddRange(Encode.GetString(File.ReadAllBytes("./urls")).Split('\n'));
             }
             foreach (var url in m_Urls) { urlText.Items.Add(url); }
             if (urlText.Items.Count > 0) urlText.Text = (string)urlText.Items[0];
-            if (System.IO.File.Exists("./contenttypes")) {
+            if (File.Exists("./contenttypes")) {
                 m_ContentTypes.AddRange(Encode.GetString(File.ReadAllBytes("./contenttypes")).Split('\n'));
+            } else {
+                m_ContentTypes.AddRange(m_ContentBaseTypes);
             }
-            if (System.IO.File.Exists("./content")) {
+            if (File.Exists("./content")) {
                 contentText.Text = Encode.GetString(File.ReadAllBytes("./content"));
             }
             foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
-            foreach (var contenttype in m_ContentBaseTypes) { contentTypeText.Items.Add(contenttype); }
             if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
         }
         private void Save() {
@@ -49,14 +50,10 @@ namespace ScorpioHttpRequester {
             m_Urls.Insert(0, url);
             File.WriteAllBytes("./urls", Encode.GetBytes(string.Join("\n", m_Urls.ToArray())));
             string contentType = contentTypeText.Text;
-            if (!m_ContentTypes.Contains(contentType)) {
-                contentTypeText.Items.Add(contentType);
-            }
-            if (!m_ContentBaseTypes.Contains(contentType)) {
-                m_ContentTypes.Remove(contentType);
-                m_ContentTypes.Insert(0, contentType);
-                File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));
-            }
+            if (!contentTypeText.Items.Contains(contentType)) { contentTypeText.Items.Add(contentType); }
+            m_ContentTypes.Remove(contentType);
+            m_ContentTypes.Insert(0, contentType);
+            File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));
             if (!string.IsNullOrEmpty(contentText.Text))
                 File.WriteAllBytes("./content", Encode.GetBytes(contentText.Text));
         }

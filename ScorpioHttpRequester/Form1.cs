@@ -38,8 +38,8 @@ namespace ScorpioHttpRequester {
             if (System.IO.File.Exists("./content")) {
                 contentText.Text = Encode.GetString(File.ReadAllBytes("./content"));
             }
-            foreach (var contenttype in m_ContentBaseTypes) { contentTypeText.Items.Add(contenttype); }
             foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
+            foreach (var contenttype in m_ContentBaseTypes) { contentTypeText.Items.Add(contenttype); }
             if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
         }
         private void Save() {
@@ -48,6 +48,9 @@ namespace ScorpioHttpRequester {
             m_Urls.Insert(0, url);
             File.WriteAllBytes("./urls", Encode.GetBytes(string.Join("\n", m_Urls.ToArray())));
             string contentType = contentTypeText.Text;
+            if (!m_ContentTypes.Contains(contentType)) {
+                contentTypeText.Items.Add(contentType);
+            }
             if (!m_ContentBaseTypes.Contains(contentType)) {
                 m_ContentTypes.Remove(contentType);
                 m_ContentTypes.Insert(0, contentType);

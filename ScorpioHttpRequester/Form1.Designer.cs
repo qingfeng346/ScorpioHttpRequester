@@ -166,6 +166,7 @@
             // 
             // buttonUrlEncode
             // 
+            this.buttonUrlEncode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUrlEncode.Location = new System.Drawing.Point(462, 573);
             this.buttonUrlEncode.Name = "buttonUrlEncode";
             this.buttonUrlEncode.Size = new System.Drawing.Size(75, 23);
@@ -176,6 +177,7 @@
             // 
             // buttonUrlDecode
             // 
+            this.buttonUrlDecode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUrlDecode.Location = new System.Drawing.Point(543, 573);
             this.buttonUrlDecode.Name = "buttonUrlDecode";
             this.buttonUrlDecode.Size = new System.Drawing.Size(75, 23);

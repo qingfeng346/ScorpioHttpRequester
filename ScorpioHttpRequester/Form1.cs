@@ -50,7 +50,7 @@ namespace ScorpioHttpRequester {
             m_Urls.Insert(0, url);
             File.WriteAllBytes("./urls", Encode.GetBytes(string.Join("\n", m_Urls.ToArray())));
             string contentType = contentTypeText.Text;
-            if (!contentTypeText.Items.Contains(contentType)) { contentTypeText.Items.Add(contentType); }
+            if (!contentTypeText.Items.Contains(contentType)) { contentTypeText.Items.Insert(0, contentType); }
             m_ContentTypes.Remove(contentType);
             m_ContentTypes.Insert(0, contentType);
             File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));

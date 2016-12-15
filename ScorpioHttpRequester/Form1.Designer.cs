@@ -23,6 +23,7 @@
         /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.urlText = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonGet = new System.Windows.Forms.Button();
@@ -201,6 +202,7 @@
             this.Controls.Add(this.buttonGet);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.urlText);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "HttpRequester";
             this.Load += new System.EventHandler(this.Form1_Load);

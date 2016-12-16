@@ -102,6 +102,8 @@ namespace ScorpioHttpRequester {
                 return;
             }
             Save();
+            statusText.Text = "";
+            resultText.Text = "";
             Thread thread = new Thread(() => {
                 try {
                     HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -128,6 +130,8 @@ namespace ScorpioHttpRequester {
             }
             string content = contentText.Text; 
             string contentType = contentTypeText.Text;
+            statusText.Text = "";
+            resultText.Text = "";
             Save();
             Thread thread = new Thread(() => {
                 try {

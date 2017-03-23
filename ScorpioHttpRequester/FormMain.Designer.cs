@@ -1,5 +1,5 @@
 ﻿namespace ScorpioHttpRequester {
-    partial class Form1 {
+    partial class FormMain {
         /// <summary>
         /// 必需的设计器变量。
         /// </summary>
@@ -23,7 +23,7 @@
         /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.urlText = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonGet = new System.Windows.Forms.Button();
@@ -38,8 +38,11 @@
             this.statusText = new System.Windows.Forms.RichTextBox();
             this.buttonUrlEncode = new System.Windows.Forms.Button();
             this.buttonUrlDecode = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.MenuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // urlText
@@ -47,7 +50,7 @@
             this.urlText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.urlText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.urlText.FormattingEnabled = true;
-            this.urlText.Location = new System.Drawing.Point(41, 12);
+            this.urlText.Location = new System.Drawing.Point(38, 27);
             this.urlText.Name = "urlText";
             this.urlText.Size = new System.Drawing.Size(411, 20);
             this.urlText.TabIndex = 0;
@@ -55,7 +58,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 15);
+            this.label1.Location = new System.Drawing.Point(3, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 1;
@@ -63,7 +66,7 @@
             // 
             // buttonGet
             // 
-            this.buttonGet.Location = new System.Drawing.Point(41, 39);
+            this.buttonGet.Location = new System.Drawing.Point(38, 54);
             this.buttonGet.Name = "buttonGet";
             this.buttonGet.Size = new System.Drawing.Size(75, 23);
             this.buttonGet.TabIndex = 2;
@@ -73,7 +76,7 @@
             // 
             // buttonPost
             // 
-            this.buttonPost.Location = new System.Drawing.Point(122, 38);
+            this.buttonPost.Location = new System.Drawing.Point(119, 53);
             this.buttonPost.Name = "buttonPost";
             this.buttonPost.Size = new System.Drawing.Size(75, 23);
             this.buttonPost.TabIndex = 3;
@@ -106,10 +109,10 @@
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(12, 68);
+            this.tabControl1.Location = new System.Drawing.Point(12, 93);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(444, 532);
+            this.tabControl1.Size = new System.Drawing.Size(444, 507);
             this.tabControl1.TabIndex = 6;
             // 
             // tabPage1
@@ -120,7 +123,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(436, 506);
+            this.tabPage1.Size = new System.Drawing.Size(436, 481);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -142,7 +145,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.contentText.Location = new System.Drawing.Point(3, 39);
             this.contentText.Name = "contentText";
-            this.contentText.Size = new System.Drawing.Size(430, 461);
+            this.contentText.Size = new System.Drawing.Size(430, 436);
             this.contentText.TabIndex = 1;
             this.contentText.Text = "";
             // 
@@ -187,7 +190,24 @@
             this.buttonUrlDecode.UseVisualStyleBackColor = true;
             this.buttonUrlDecode.Click += new System.EventHandler(this.buttonUrlDecode_Click);
             // 
-            // Form1
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuAbout});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(962, 25);
+            this.menuStrip1.TabIndex = 10;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // MenuAbout
+            // 
+            this.MenuAbout.Name = "MenuAbout";
+            this.MenuAbout.Size = new System.Drawing.Size(44, 21);
+            this.MenuAbout.Text = "关于";
+            this.MenuAbout.Click += new System.EventHandler(this.MenuAbout_Click);
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -202,13 +222,17 @@
             this.Controls.Add(this.buttonGet);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.urlText);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "FormMain";
             this.Text = "HttpRequester";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,6 +254,8 @@
         private System.Windows.Forms.RichTextBox statusText;
         private System.Windows.Forms.Button buttonUrlEncode;
         private System.Windows.Forms.Button buttonUrlDecode;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem MenuAbout;
     }
 }
 

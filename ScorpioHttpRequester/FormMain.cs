@@ -10,9 +10,8 @@ using System.Net;
 using System.Threading;
 
 namespace ScorpioHttpRequester {
-    public partial class Form1 : Form {
+    public partial class FormMain : Form {
         private static readonly Encoding Encode = Encoding.UTF8;
-        private delegate void Action();
         private List<string> m_Urls = new List<string>();
         private List<string> m_ContentBaseTypes = new List<string>() {
             "text/plain",
@@ -23,8 +22,9 @@ namespace ScorpioHttpRequester {
             "application/x-www-form-urlencoded",
         };
         private List<string> m_ContentTypes = new List<string>();
-        public Form1() {
+        public FormMain() {
             InitializeComponent();
+            Util.Init(this);
         }
         private void Form1_Load(object sender, EventArgs e) {
             tabControl1.TabPages[0].Text = "Content";
@@ -43,6 +43,7 @@ namespace ScorpioHttpRequester {
             }
             foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
             if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
+            Util.CheckVersion(false);
         }
         private void Save() {
             string url = urlText.Text;
@@ -56,24 +57,6 @@ namespace ScorpioHttpRequester {
             File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));
             if (!string.IsNullOrEmpty(contentText.Text))
                 File.WriteAllBytes("./content", Encode.GetBytes(contentText.Text));
-        }
-        private void Exec(Action action) {
-            Invoke(action);
-        }
-        private string toString(Stream stream) {
-            if (stream == null) return "";
-            return Encode.GetString(toByteArray(stream));
-        }
-        /// <summary> 字节流转成byte[] </summary>
-        private byte[] toByteArray(Stream stream) {
-            if (stream == null) return null;
-            MemoryStream result = new MemoryStream();
-            int length = 0;
-            byte[] bytes = new byte[8192];
-            while ((length = stream.Read(bytes, 0, 8192)) > 0) {
-                result.Write(bytes, 0, length);
-            }
-            return result.ToArray();
         }
         private void SetData(HttpWebResponse response) {
             statusLabel.Text = "Status : " + response.ProtocolVersion.ToString() + " " + (int)response.StatusCode + " " + response.StatusDescription;
@@ -90,7 +73,7 @@ namespace ScorpioHttpRequester {
                     builder.AppendLine("        " + head + " : " + response.Headers.Get(head));
                 }
                 statusText.Text = builder.ToString();
-                resultText.Text = toString(response.GetResponseStream());
+                resultText.Text = Util.toString(response.GetResponseStream());
             } else {
                 resultText.Text = "";
             }
@@ -114,10 +97,10 @@ namespace ScorpioHttpRequester {
                     } catch (WebException ex) {
                         response = (HttpWebResponse)ex.Response;
                     }
-                    Exec(() => { SetData(response); });
+                    Util.Exec(() => { SetData(response); });
                     response.Close();
-                } catch (Exception ex) { 
-                    Exec(() => { resultText.Text = "请求出错 : " + ex.ToString(); });
+                } catch (Exception ex) {
+                    Util.Exec(() => { resultText.Text = "请求出错 : " + ex.ToString(); });
                 }
             });
             thread.Start();
@@ -150,10 +133,10 @@ namespace ScorpioHttpRequester {
                     } catch (WebException ex) {
                         response = (HttpWebResponse)ex.Response;
                     }
-                    Exec(() => { SetData(response); });
+                    Util.Exec(() => { SetData(response); });
                     response.Close();
                 } catch (Exception ex) {
-                    Exec(() => { resultText.Text = "请求出错 : " + ex.ToString(); });
+                    Util.Exec(() => { resultText.Text = "请求出错 : " + ex.ToString(); });
                 }
             });
             thread.Start();
@@ -169,6 +152,11 @@ namespace ScorpioHttpRequester {
             string text = resultText.Text;
             if (string.IsNullOrEmpty(text)) { return; }
             resultText.Text = Commons.Util.UriTranscoder.URLDecode(text, Encoding.UTF8);
+        }
+
+        private void MenuAbout_Click(object sender, EventArgs e)
+        {
+            new FormAbout().Show(this);
         }
     }
 }

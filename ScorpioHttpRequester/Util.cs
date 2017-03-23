@@ -54,7 +54,7 @@ public class Util
                 if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
                     var str = toString(response.GetResponseStream());
                     Exec(() => {
-                        if (str == Version) {
+                        if (str != Version) {
                             var result = MessageBox.Show("检测到最新版本 : v" + str + "\n是否立刻去下载？", "发现新版本", MessageBoxButtons.YesNoCancel);
                             if (result == DialogResult.Yes) {
                                 OpenUrl();

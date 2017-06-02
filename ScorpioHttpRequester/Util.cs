@@ -8,15 +8,12 @@ using System.Net;
 public class Util
 {
     public delegate void Action();
-    private const string Url = "http://www.fengyuezhu.com/app.php?app=ScorpioHttpRequester";
-    private const string VersionUrl = "http://www.fengyuezhu.com/project/ScorpioHttpRequester/version.v";
     private static readonly Encoding Encode = Encoding.UTF8;
     private static Control control;
     public static string Version { get; private set; }
     public static void Init(Control control)
     {
         Util.control = control;
-        Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
     public static void Exec(Action action)
     {
@@ -37,45 +34,5 @@ public class Util
             result.Write(bytes, 0, length);
         }
         return result.ToArray();
-    }
-    public static void CheckVersion(bool showerror)
-    {
-        new Thread(() => {
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(VersionUrl);
-                request.Timeout = 30000;                    //设定超时时间30秒
-                HttpWebResponse response = null;
-                try {
-                    response = (HttpWebResponse)request.GetResponse(); ;
-                } catch (WebException ex) {
-                    response = (HttpWebResponse)ex.Response;
-                }
-                if (response.StatusCode >= HttpStatusCode.OK && response.StatusCode < HttpStatusCode.Ambiguous) {
-                    var str = toString(response.GetResponseStream());
-                    Exec(() => {
-                        if (str != Version) {
-                            var result = MessageBox.Show("检测到最新版本 : v" + str + "\n是否立刻去下载？", "发现新版本", MessageBoxButtons.YesNoCancel);
-                            if (result == DialogResult.Yes) {
-                                OpenUrl();
-                            }
-                        } else if (showerror) {
-                            MessageBox.Show("当前已经是最新版本");
-                        }
-                    });
-                } else if (showerror) {
-                    Exec(() => { MessageBox.Show("请求版本号出错 : " + (int)response.StatusCode + " " + response.StatusCode); });
-                }
-                response.Close();
-            } catch (Exception e) {
-                if (showerror) {
-                    Exec(() => { MessageBox.Show("请求版本号出错 : " + e.ToString()); });
-                }
-            }
-        }).Start();
-    }
-    public static void OpenUrl()
-    {
-        System.Diagnostics.Process.Start(Url);
     }
 }

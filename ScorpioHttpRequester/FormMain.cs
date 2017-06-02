@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Diagnostics;
 
 namespace ScorpioHttpRequester {
     public partial class FormMain : Form {
@@ -43,7 +44,6 @@ namespace ScorpioHttpRequester {
             }
             foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
             if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
-            Util.CheckVersion(false);
         }
         private void Save() {
             string url = urlText.Text;
@@ -156,7 +156,8 @@ namespace ScorpioHttpRequester {
 
         private void MenuAbout_Click(object sender, EventArgs e)
         {
-            new FormAbout().Show(this);
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Process.Start("ScorpioUpdater.exe", version + " http://www.fengyuezhu.com/app.php?app=ScorpioHttpRequester http://www.fengyuezhu.com/project/ScorpioHttpRequester/");
         }
     }
 }

@@ -5,27 +5,22 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 using System.Net;
-public class Util
-{
+public class Util {
     public delegate void Action();
-    private static readonly Encoding Encode = Encoding.UTF8;
     private static Control control;
     public static string Version { get; private set; }
-    public static void Init(Control control)
-    {
+    public static void Init(Control control) {
         Util.control = control;
     }
-    public static void Exec(Action action)
-    {
+    public static void Exec(Action action) {
         control.Invoke(action);
     }
-    public static string toString(Stream stream) {
+    public static string toString(Stream stream, Encoding encode) {
         if (stream == null) return "";
-        return Encode.GetString(toByteArray(stream));
+        return encode.GetString(toByteArray(stream));
     }
     /// <summary> 字节流转成byte[] </summary>
-    public static byte[] toByteArray(Stream stream)
-    {
+    public static byte[] toByteArray(Stream stream) {
         if (stream == null) return null;
         MemoryStream result = new MemoryStream();
         int length = 0;

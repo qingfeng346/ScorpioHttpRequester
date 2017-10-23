@@ -13,6 +13,10 @@ using System.Diagnostics;
 namespace ScorpioHttpRequester {
     public partial class FormMain : Form {
         private static readonly Encoding Encode = Encoding.UTF8;
+        private const string urls = "urls";                     //访问列表
+        private const string types = "types";                   //content 类型
+        private const string encodeRequest = "encodeRequest";   //post请求数据编码
+        private const string encodeResult = "encodeResult";     //返回数据编码
         private List<string> m_Urls = new List<string>();
         private List<string> m_ContentBaseTypes = new List<string>() {
             "text/plain",
@@ -22,41 +26,70 @@ namespace ScorpioHttpRequester {
             "application/rdf+xml",
             "application/x-www-form-urlencoded",
         };
+        class EncodeData {
+            private string encodingName;
+            private Encoding _encoding;
+            public EncodeData(string name) {
+                _encoding = Encoding.GetEncoding(name);
+                encodingName = encoding.EncodingName;
+            }
+            public Encoding encoding { get { return _encoding; } }
+            public override string ToString() {
+                return encodingName;
+            }
+        }
+        private List<EncodeData> m_Encoders = new List<EncodeData>() {
+            new EncodeData("UTF-8"),
+            new EncodeData("US-ASCII"),
+            new EncodeData("unicodeFFFE"),
+            new EncodeData("GB2312"),
+            new EncodeData("UTF-7"),
+            new EncodeData("UTF-16"),
+            new EncodeData("UTF-32"),
+        };
+
+
         private List<string> m_ContentTypes = new List<string>();
+        private Encoding m_EncodingRequest;
+        private Encoding m_EncodingResult;
+
         public FormMain() {
             InitializeComponent();
             Util.Init(this);
         }
         private void Form1_Load(object sender, EventArgs e) {
+            comboEncodeRequest.Items.AddRange(m_Encoders.ToArray());
+            comboEncodeRequest.SelectedIndex = localStroage.has(encodeRequest) ? Convert.ToInt32(localStroage.get(encodeRequest)) : 0;
+            comboEncodeResult.Items.AddRange(m_Encoders.ToArray());
+            comboEncodeResult.SelectedIndex = localStroage.has(encodeResult) ? Convert.ToInt32(localStroage.get(encodeResult)) : 0;
+
             tabControl1.TabPages[0].Text = "Content";
-            if (File.Exists("./urls")) {
-                m_Urls.AddRange(Encode.GetString(File.ReadAllBytes("./urls")).Split('\n'));
-            }
+            if (localStroage.has(urls)) m_Urls.AddRange(localStroage.get(urls).Split(';'));
             foreach (var url in m_Urls) { urlText.Items.Add(url); }
             if (urlText.Items.Count > 0) urlText.Text = (string)urlText.Items[0];
-            if (File.Exists("./contenttypes")) {
-                m_ContentTypes.AddRange(Encode.GetString(File.ReadAllBytes("./contenttypes")).Split('\n'));
+            if (localStroage.has(types)) {
+                m_ContentTypes.AddRange(localStroage.get(types).Split(';'));
             } else {
                 m_ContentTypes.AddRange(m_ContentBaseTypes);
             }
+            foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
+            if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
             if (File.Exists("./content")) {
                 contentText.Text = Encode.GetString(File.ReadAllBytes("./content"));
             }
-            foreach (var contenttype in m_ContentTypes) { contentTypeText.Items.Add(contenttype); }
-            if (contentTypeText.Items.Count > 0) contentTypeText.Text = (string)contentTypeText.Items[0];
         }
         private void Save() {
             string url = urlText.Text;
+            if (!urlText.Items.Contains(url)) { urlText.Items.Insert(0, url); }
             m_Urls.Remove(url);
             m_Urls.Insert(0, url);
-            File.WriteAllBytes("./urls", Encode.GetBytes(string.Join("\n", m_Urls.ToArray())));
             string contentType = contentTypeText.Text;
             if (!contentTypeText.Items.Contains(contentType)) { contentTypeText.Items.Insert(0, contentType); }
             m_ContentTypes.Remove(contentType);
             m_ContentTypes.Insert(0, contentType);
-            File.WriteAllBytes("./contenttypes", Encode.GetBytes(string.Join("\n", m_ContentTypes.ToArray())));
-            if (!string.IsNullOrEmpty(contentText.Text))
-                File.WriteAllBytes("./content", Encode.GetBytes(contentText.Text));
+            localStroage.set(urls, string.Join(";", m_Urls.ToArray()));
+            localStroage.set(types, string.Join(";", m_ContentTypes.ToArray()));
+            File.WriteAllBytes("./content", Encode.GetBytes(contentText.Text));
         }
         private void SetData(HttpWebResponse response) {
             statusLabel.Text = "Status : " + response.ProtocolVersion.ToString() + " " + (int)response.StatusCode + " " + response.StatusDescription;
@@ -73,7 +106,7 @@ namespace ScorpioHttpRequester {
                     builder.AppendLine("        " + head + " : " + response.Headers.Get(head));
                 }
                 statusText.Text = builder.ToString();
-                resultText.Text = Util.toString(response.GetResponseStream());
+                resultText.Text = Util.toString(response.GetResponseStream(), m_EncodingResult);
             } else {
                 resultText.Text = "";
             }
@@ -118,7 +151,7 @@ namespace ScorpioHttpRequester {
             Save();
             Thread thread = new Thread(() => {
                 try {
-                    byte[] body = Encode.GetBytes(content);
+                    byte[] body = m_EncodingRequest.GetBytes(content);
                     HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
                     request.Timeout = 3000;                     //设定超时时间30秒
                     request.Method = "POST";                    //POST类型
@@ -145,19 +178,26 @@ namespace ScorpioHttpRequester {
         private void buttonUrlEncode_Click(object sender, EventArgs e) {
             string text = resultText.Text;
             if (string.IsNullOrEmpty(text)) { return; }
-            resultText.Text = Commons.Util.UriTranscoder.URLEncode(text, Encoding.UTF8);
+            resultText.Text = Commons.Util.UriTranscoder.URLEncode(text, m_EncodingResult);
         }
 
         private void buttonUrlDecode_Click(object sender, EventArgs e) {
             string text = resultText.Text;
             if (string.IsNullOrEmpty(text)) { return; }
-            resultText.Text = Commons.Util.UriTranscoder.URLDecode(text, Encoding.UTF8);
+            resultText.Text = Commons.Util.UriTranscoder.URLDecode(text, m_EncodingResult);
         }
 
-        private void MenuAbout_Click(object sender, EventArgs e)
-        {
+        private void MenuAbout_Click(object sender, EventArgs e) {
             string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Process.Start("ScorpioUpdater.exe", version + " http://www.fengyuezhu.com/app.php?app=ScorpioHttpRequester http://www.fengyuezhu.com/project/ScorpioHttpRequester/");
+        }
+        private void comboEncodeRequest_SelectedIndexChanged(object sender, EventArgs e) {
+            localStroage.set(encodeRequest, comboEncodeRequest.SelectedIndex.ToString());
+            m_EncodingRequest = ((EncodeData)comboEncodeRequest.SelectedItem).encoding;
+        }
+        private void comboEncodeResult_SelectedIndexChanged(object sender, EventArgs e) {
+            localStroage.set(encodeResult, comboEncodeResult.SelectedIndex.ToString());
+            m_EncodingResult = ((EncodeData)comboEncodeResult.SelectedItem).encoding;
         }
     }
 }
